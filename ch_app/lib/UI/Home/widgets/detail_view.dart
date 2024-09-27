@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import '../../../Model/Product.dart';
 
@@ -19,26 +18,40 @@ class _DetailPageState extends State<DetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.product.title),
+        title: Text(toTitleCase(widget.product.title)),
       ),
+      backgroundColor: Colors.white, // Set the background color to white
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Image carousel
-            Container(
-              height: 250,
-              child: PageView.builder(
-                itemCount: widget.product.media.mediaUrls.length,
-                itemBuilder: (context, index) {
-                  return Image.network(
-                    widget.product.media.mediaUrls[index],
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Icon(Icons.error);
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: Colors.black,
+                    width: 1.0,
+                  ),
+                ),
+                height: 250,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: PageView.builder(
+                    itemCount: widget.product.media.mediaUrls.length,
+                    itemBuilder: (context, index) {
+                      return Image.network(
+                        widget.product.media.mediaUrls[index],
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Icon(Icons.error);
+                        },
+                      );
                     },
-                  );
-                },
+                  ),
+                ),
               ),
             ),
             Padding(
@@ -47,18 +60,24 @@ class _DetailPageState extends State<DetailPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.product.title,
+                    toTitleCase(widget.product.title),
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 8),
                   Text(
-                    widget.product.info,
+                    capitalizeFirstWord(widget.product.info),
                     style: TextStyle(fontSize: 16),
                   ),
                   SizedBox(height: 16),
-                  Text(
-                    'Price: ${widget.product.productPricing.priceText}',
-                    style: TextStyle(fontSize: 18, color: Colors.green),
+                  Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.circular(5)),
+                    child: Text(
+                      'Price: ${widget.product.productPricing.priceText}',
+                      style: TextStyle(fontSize: 18, color: Colors.white),
+                    ),
                   ),
                   SizedBox(height: 8),
                   Text(
@@ -68,7 +87,14 @@ class _DetailPageState extends State<DetailPage> {
                   SizedBox(height: 16),
                   Text(
                     'Sold by: ${widget.product.productSoldBy.creatorName}',
-                    style: TextStyle(fontSize: 16),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: widget.product.productSoldBy.creatorName
+                                  .toLowerCase() ==
+                              '(only veg)'
+                          ? Colors.green
+                          : Colors.black,
+                    ),
                   ),
                   SizedBox(height: 16),
                   // Options with radio buttons
@@ -93,14 +119,6 @@ class _DetailPageState extends State<DetailPage> {
                             ))
                         .toList(),
                   ],
-                  SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Handle add to cart or buy action
-                      Get.snackbar('Action', 'Added to cart');
-                    },
-                    child: Text('Add to Cart'),
-                  ),
                 ],
               ),
             ),
@@ -109,4 +127,17 @@ class _DetailPageState extends State<DetailPage> {
       ),
     );
   }
+}
+
+String toTitleCase(String text) {
+  if (text.isEmpty) return text;
+  return text.split(' ').map((word) {
+    if (word.isEmpty) return word;
+    return word[0].toUpperCase() + word.substring(1).toLowerCase();
+  }).join(' ');
+}
+
+String capitalizeFirstWord(String text) {
+  if (text.isEmpty) return text;
+  return text[0].toUpperCase() + text.substring(1).toLowerCase();
 }

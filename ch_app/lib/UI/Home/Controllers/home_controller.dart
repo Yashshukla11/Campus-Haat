@@ -8,9 +8,16 @@ class HomeController extends GetxController {
   final RxList<Product> products = <Product>[].obs;
   final RxList<Product> filteredProducts = <Product>[].obs;
   final RxBool isLoading = true.obs;
-  final int limit = 20;
+  final RxBool isLoadingMore = false.obs;
+  final RxBool hasError = false.obs;
+  final int limit = 7;
   int currentStart = 0;
   final RxString searchQuery = ''.obs;
+  final RxBool hasMoreProducts = true.obs;
+
+  // Properties for tick animation
+  final RxBool showTickAnimation = false.obs;
+  final RxDouble tickOpacity = 0.0.obs;
 
   @override
   void onInit() {
@@ -19,8 +26,11 @@ class HomeController extends GetxController {
   }
 
   Future<void> fetchProducts() async {
+    if (!hasMoreProducts.value) return;
+
     try {
       isLoading.value = true;
+      hasError.value = false;
 
       final requestBody = {
         "creator": {
@@ -53,21 +63,28 @@ class HomeController extends GetxController {
         currentStart += newProducts.length;
 
         if (newProducts.length < limit) {
-          // We've reached the end of the list
-          Get.snackbar('Info', 'All products loaded');
-        } else {
-          // There might be more products, fetch again
-          fetchProducts();
+          hasMoreProducts.value = false;
         }
       } else {
+        hasError.value = true;
         Get.snackbar('Error', productResponse.baseResponse.message);
       }
     } catch (e) {
+      hasError.value = true;
       print('Error details: $e');
       Get.snackbar('Error', 'Failed to load products. Please try again.');
     } finally {
       isLoading.value = false;
       filterProducts();
+    }
+  }
+
+  void loadMoreProducts() {
+    if (!isLoadingMore.value && hasMoreProducts.value) {
+      isLoadingMore.value = true;
+      fetchProducts().then((_) {
+        isLoadingMore.value = false;
+      });
     }
   }
 
@@ -88,5 +105,24 @@ class HomeController extends GetxController {
               .toLowerCase()
               .contains(searchQuery.value.toLowerCase())));
     }
+  }
+
+  void showTickAnimationOnAdd() {
+    showTickAnimation.value = true;
+    tickOpacity.value = 1.0;
+    Future.delayed(Duration(milliseconds: 1000), () {
+      tickOpacity.value = 0.0;
+      Future.delayed(Duration(milliseconds: 500), () {
+        showTickAnimation.value = false;
+      });
+    });
+  }
+
+  void refreshProducts() {
+    products.clear();
+    filteredProducts.clear();
+    currentStart = 0;
+    hasMoreProducts.value = true;
+    fetchProducts();
   }
 }
