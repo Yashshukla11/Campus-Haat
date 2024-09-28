@@ -1,3 +1,11 @@
+## Download
+
+Click the button below to download the latest APK of the Campus Haat app.
+
+[![Download APK](https://img.shields.io/badge/Download-APK-blue)](https://drive.google.com/file/d/1z498ktKZDkiXFam84VLhJXHp3qZ8Zuuo/view?usp=sharing)
+
+
+
 # Campus Haat - A Flutter App for Food Delivery
 
 Campus Haat is a Flutter-based mobile application designed to streamline food delivery services on
@@ -47,11 +55,6 @@ To run this project locally, follow these steps:
     flutter run
     ```
 
-## Download
-
-Click the button below to download the latest APK of the Campus Haat app.
-
-[![Download APK](https://img.shields.io/badge/Download-APK-blue)](https://drive.google.com/file/d/1z498ktKZDkiXFam84VLhJXHp3qZ8Zuuo/view?usp=sharing)
 
 ## How it Works
 
