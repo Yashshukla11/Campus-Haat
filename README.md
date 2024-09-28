@@ -2,7 +2,7 @@
 
 Click the button below to download the latest APK of the Campus Haat app.
 
-[![Download APK](https://img.shields.io/badge/Download-APK-blue)](https://drive.google.com/file/d/1z498ktKZDkiXFam84VLhJXHp3qZ8Zuuo/view?usp=sharing)
+[![Download APK](https://img.shields.io/badge/Download-APK-blue)](https://drive.google.com/file/d/1BzmYm6rd_YCcCB9w5nmq9VruTH67nCcv/view?usp=sharing)
 
 
 
